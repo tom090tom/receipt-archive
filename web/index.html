@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在本机为可复制文字的数电发票生成日期、商户和金额文件名，确认后复制归档。">
+  <title>报销归档 · 数电发票自动命名</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="/"><span class="seal" aria-hidden="true">档</span>报销归档</a>
+    <p class="local-badge"><span class="dot" aria-hidden="true"></span>本机处理 · 不上传</p>
+  </header>
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Receipt Archive</p>
+        <h1>文件名先说清<br>哪天、付给谁、多少钱。</h1>
+        <p class="lede">放入可复制文字的数电发票。核对销售方和价税合计之后，按原文件复制进一个 ZIP。扫描件和旧版发票会停下来，不会被猜一个名字。</p>
+      </div>
+      <ol class="steps">
+        <li><span>01</span>放入 PDF</li>
+        <li><span>02</span>核对命名</li>
+        <li><span>03</span>复制带走</li>
+      </ol>
+    </section>
+    <p id="status" class="status" role="status">先加载示例，或选择自己的 PDF。</p>
+    <div class="workspace">
+      <section class="panel" aria-labelledby="intake-title">
+        <div class="section-head">
+          <div>
+            <p class="step">01 / 放入</p>
+            <h2 id="intake-title">选择这批发票</h2>
+          </div>
+          <button id="demo" class="button secondary" type="button">加载示例</button>
+        </div>
+        <label class="drop" for="files">
+          <strong>选择 PDF</strong>
+          <span>能复制文字的普通发票或增值税专用发票</span>
+          <small>最多 20 个，单个 8 MiB，合计 40 MiB</small>
+          <input id="files" type="file" accept="application/pdf,.pdf" multiple>
+        </label>
+        <div class="row-actions">
+          <p id="source-count">尚未选择文件</p>
+          <button id="clear" class="text-button" type="button">清空</button>
+        </div>
+      </section>
+      <section class="panel" aria-labelledby="rule-title">
+        <div class="section-head">
+          <div>
+            <p class="step">02 / 规则</p>
+            <h2 id="rule-title">下次沿用的文件名</h2>
+          </div>
+        </div>
+        <label class="field" for="template">命名规则
+          <input id="template" maxlength="80" spellcheck="false" value="{date}_{seller}_{amount}">
+        </label>
+        <div class="tokens" role="group" aria-label="插入字段">
+          <button type="button" data-token="{date}">日期</button>
+          <button type="button" data-token="{seller}">销售方</button>
+          <button type="button" data-token="{amount}">价税合计</button>
+          <button type="button" data-token="{number}">发票号码</button>
+        </div>
+        <p id="template-preview" class="preview">规则会套用到每一张已识别的发票。</p>
+        <div class="row-actions">
+          <button id="save-rule" class="button secondary" type="button">保存规则</button>
+          <button id="reset-rule" class="text-button" type="button">恢复默认</button>
+          <p id="saved-state">只保存在这台浏览器</p>
+        </div>
+      </section>
+    </div>
+    <section class="panel ledger-panel" aria-labelledby="ledger-title">
+      <div class="section-head">
+        <div>
+          <p class="step">03 / 归档</p>
+          <h2 id="ledger-title">确认后再复制</h2>
+        </div>
+        <div class="export-actions">
+          <button id="save-folder" class="button secondary" type="button" hidden>保存到文件夹</button>
+          <button id="download" class="button primary" type="button" disabled>下载 ZIP</button>
+        </div>
+      </div>
+      <p id="ledger-summary">识别完成后，在这里核对每一张。</p>
+      <div id="ledger" class="ledger"></div>
+    </section>
+    <footer>
+      <p>v0.1.0 · MIT。只处理有文字层的数电发票，不查验真伪，也不代替报销审核。</p>
+      <p><a href="/DISCLAIMER.md">使用与免责说明</a><a href="/SECURITY.md">安全边界</a></p>
+    </footer>
+  </main>
+</body>
+</html>
